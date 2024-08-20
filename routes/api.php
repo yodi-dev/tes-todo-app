@@ -8,5 +8,6 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-Route::post('/validate-user', [TasksController::class, 'validateUser']);
+Route::post('/validate-username', [TasksController::class, 'validateUsername']);
+Route::post('/validate-email', [TasksController::class, 'validateEmail']);
 Route::apiResource('/tasks', TasksController::class);

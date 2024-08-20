@@ -65,6 +65,7 @@
 
 <script>
 import debounce from "lodash/debounce";
+import axios from "axios";
 
 export default {
     data() {
@@ -91,22 +92,28 @@ export default {
     methods: {
         validateUsername() {
             axios
-                .post("api/validate-user", {
+                .post("http://127.0.0.1:8000/api/validate-username", {
                     username: this.form.username,
                 })
                 .then((response) => {
                     this.errors.username = null;
                 })
                 .catch((error) => {
-                    if (error.response && error.response.data.errors.username) {
-                        this.errors.username =
-                            error.response.data.errors.username[0];
+                    if (error.response) {
+                        console.error("Error:", error.response.data);
+                        if (
+                            error.response.data.errors &&
+                            error.response.data.errors.username
+                        ) {
+                            this.errors.username =
+                                error.response.data.errors.username[0];
+                        }
                     }
                 });
         },
         validateEmail() {
             axios
-                .post("/api/validate-user", { email: this.form.email })
+                .post("/api/validate-email", { email: this.form.email })
                 .then((response) => {
                     this.errors.email = null;
                 })

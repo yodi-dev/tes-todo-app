@@ -64,6 +64,17 @@ class TasksController extends Controller
         // }
     }
 
+    public function validateUser(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string|unique:users,username',
+            'email' => 'required|email|unique:users,email'
+        ]);
+
+        return response()->json(['message' => 'Valid']);
+    }
+
+
     /**
      * Display the specified resource.
      */

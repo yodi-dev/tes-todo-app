@@ -14,8 +14,10 @@
         @vite('resources/css/app.css')
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     </head>
-    <body class="font-sans antialiased dark:bg-black dark:text-white/50">
-        <div id="app"></div>
+    <body class="bg-light">
+        <div id="app">
+
+        </div>
         @vite('resources/js/app.js')
         <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
     </body>

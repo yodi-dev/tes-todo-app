@@ -10,6 +10,8 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $table = 'categories';
+
     protected $fillable = ['name', 'created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'];
 
     public function tasks(): HasMany

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\User;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class TasksController extends Controller
@@ -29,39 +31,42 @@ class TasksController extends Controller
         }
     }
 
+    public function create()
+    {
+        $categories = Category::all();
+        return view('tasks.create', compact('categories'));
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'name'          => 'required|string',
-        //     'address'       => 'required|string',
-        //     'class'         => 'required|integer',
-        //     'phone'         => 'required|integer'
-        // ]);
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|unique:users,username',
+            'email' => 'required|email|unique:users,email',
+            'tasks' => 'required|array',
+            'tasks.*.name' => 'required|string',
+            'tasks.*.category_id' => 'required|exists:categories,id',
+        ]);
 
-        // $students = new Students([
-        //     'name'          => $request->name,
-        //     'address'       => $request->address,
-        //     'class'         => $request->class,
-        //     'phone'         => $request->phone
-        // ]);
-        // $students->save();
+        // Simpan User
+        $user = User::create([
+            'name' => $validatedData['name'],
+            'username' => $validatedData['username'],
+            'email' => $validatedData['email'],
+        ]);
 
-        // if ($students) {
-        //     return response()->json([
-        //         'status' => 'success',
-        //         'message' => 'Data added succesfully',
-        //         'data' => $students
-        //     ]);
-        // } else {
-        //     return Response()->json([
-        //         'status' => 'error',
-        //         'message' => 'Error adding data',
-        //         'data' => $students
-        //     ]);
-        // }
+        // Simpan Tasks
+        foreach ($validatedData['tasks'] as $task) {
+            $user->tasks()->create([
+                'name' => $task['name'],
+                'category_id' => $task['category_id'],
+            ]);
+        }
+
+        return response()->json(['message' => 'Data berhasil disimpan!']);
     }
 
     public function validateUsername(Request $request)
@@ -90,54 +95,10 @@ class TasksController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        // $students = Students::find($id);
-
-        // // Jika data siswa tidak ditemukan
-        // if (!$students) {
-        //     return response()->json(['message' => 'Student not found'], 404);
-        // }
-
-        // $request->validate([
-        //     'name' => 'required|string',
-        //     'class' => 'required|string',
-        //     'address' => 'required|integer',
-        //     'phone' => 'required|integer',
-        // ]);
-
-        // $students->update([
-        //     'name' => $request->name,
-        //     'class' => $request->class,
-        //     'address' => $request->address,
-        //     'phone' => $request->phone,
-        // ]);
-
-        // return response()->json([
-        //     'status' => 'success',
-        //     'message' => 'Data updated succesfully',
-        //     'data' => $students
-        // ]);
-    }
+    public function update(Request $request, string $id) {}
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        // $students = Students::find($id);
-
-        // // Jika data siswa tidak ditemukan
-        // if (!$students) {
-        //     return response()->json(['message' => 'Student not found'], 404);
-        // }
-
-        // $students->delete();
-
-        // return response()->json([
-        //     'status' => 'success',
-        //     'message' => 'Data deleted succesfully',
-        //     'data' => $students
-        // ]);
-    }
+    public function destroy(string $id) {}
 }

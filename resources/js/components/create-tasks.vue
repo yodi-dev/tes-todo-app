@@ -99,6 +99,7 @@
                         <select v-model="task.category_id" class="form-control">
                             <option
                                 v-for="category in categories"
+                                :key="category.id"
                                 :value="category.id"
                             >
                                 {{ category.name }}
@@ -194,14 +195,16 @@ export default {
             this.form.tasks.splice(index, 1);
         },
         submitForm() {
-            axios
-                .post("/api/tasks", this.form)
-                .then((response) => {
-                    console.log("Data berhasil disimpan");
-                })
-                .catch((error) => {
-                    console.log("Terjadi kesalahan:", error);
-                });
+            if (!this.errors.username && !this.errors.email) {
+                axios
+                    .post("/api/tasks", this.form)
+                    .then((response) => {
+                        console.log("Data berhasil disimpan");
+                    })
+                    .catch((error) => {
+                        console.log("Terjadi kesalahan:", error);
+                    });
+            }
         },
         fetchCategories() {
             axios.get("/api/categories").then((response) => {

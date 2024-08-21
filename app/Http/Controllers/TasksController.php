@@ -58,10 +58,13 @@ class TasksController extends Controller
             'email' => $validatedData['email'],
         ]);
 
+        $userId = $user->id;
+
         // Simpan Tasks
         foreach ($validatedData['tasks'] as $task) {
-            $user->tasks()->create([
-                'name' => $task['name'],
+            Task::create([
+                'user_id' => $userId,
+                'description' => $task['name'],
                 'category_id' => $task['category_id'],
             ]);
         }
